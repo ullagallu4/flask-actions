@@ -21,6 +21,14 @@ jobs:
       - name: docker buildx
         uses: docker/build-push-action@v3
         id: buildx
+
+      - name: Cache Docker Image Layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
       
       - name: build and push docker image
         uses: docker/build-push-action@v3
@@ -31,6 +39,8 @@ jobs:
           builder: ${{ steps.buildx.outputs.name }}
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/flask-helloworld
-        
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
+   
       - name: Verify
         run: echo ${{ steps.docker_build.outputs.digest }}
