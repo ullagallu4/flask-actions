@@ -19,7 +19,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: docker buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v1
         id: buildx
 
       - name: Cache Docker Image Layers
@@ -31,7 +31,7 @@ jobs:
             ${{ runner.os }}-buildx-
       
       - name: build and push docker image
-        uses: docker/buildx-action@v3 #docker/build-push-action@v3
+        uses: docker/buildx-action@v1 #docker/build-push-action@v3
         id: docker_build
         with:
           context: ./
